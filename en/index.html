@@ -1,0 +1,1214 @@
+<title>Frostgrid: Strategy Compendium</title>
+<!--
+  ==== About ads ====
+  This page was originally published as a Claude Artifact. Artifacts enforce a strict
+  CSP that blocks third-party ad-network scripts, so ads will NOT load while it lives there.
+
+  To monetize on your own hosting (e.g. GitHub Pages), follow docs/DEPLOY_WIKI.md:
+  paste your real ad network tag (e.g. Google AdSense's <ins class="adsbygoogle">...)
+  into the comment inside each of the 3 <div class="ad-slot"> ... </div> blocks below,
+  and move the (currently commented-out) AdSense loader script to the top of this file,
+  where a real head section would be.
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+    crossorigin="anonymous"></script>
+-->
+<style>
+  :root{
+    --night:#0c1130;
+    --panel:#141b3d;
+    --panel-2:#1b2450;
+    --line:rgba(238,241,251,0.12);
+    --frost:#eef1fb;
+    --frost-dim:#98a1c8;
+    --candle:#f0b84a;
+    --candle-dim:#c99a4a;
+    --holly:#e2665f;
+    --el-fire:#e5533a;
+    --el-water:#3a7be5;
+    --el-wood:#3aa53a;
+    --el-metal:#c9a227;
+    --el-earth:#a5703a;
+    --el-light:#d8bc2e;
+    --el-dark:#8a3ae5;
+    --shadow:0 10px 30px rgba(0,0,0,0.35);
+    --serif:Georgia,"Iowan Old Style","Hiragino Mincho ProN","Yu Mincho",serif;
+    --sans:-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic","Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ }
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --night:#eef1f8;
+      --panel:#ffffff;
+      --panel-2:#f3f5fc;
+      --line:rgba(20,26,56,0.10);
+      --frost:#141a38;
+      --frost-dim:#5a6284;
+      --candle:#a5691a;
+      --candle-dim:#8a5a1a;
+      --holly:#c8433c;
+      --shadow:0 10px 24px rgba(20,26,56,0.08);
+    }
+  }
+  :root[data-theme="dark"]{
+    --night:#0c1130; --panel:#141b3d; --panel-2:#1b2450;
+    --line:rgba(238,241,251,0.12); --frost:#eef1fb; --frost-dim:#98a1c8;
+    --candle:#f0b84a; --holly:#e2665f; --shadow:0 10px 30px rgba(0,0,0,0.35);
+  }
+  :root[data-theme="light"]{
+    --night:#eef1f8; --panel:#ffffff; --panel-2:#f3f5fc;
+    --line:rgba(20,26,56,0.10); --frost:#141a38; --frost-dim:#5a6284;
+    --candle:#a5691a; --holly:#c8433c; --shadow:0 10px 24px rgba(20,26,56,0.08);
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--night);
+    color:var(--frost);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--candle); color:#171308; }
+  a{ color:var(--candle); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline:2px solid var(--candle); outline-offset:2px; border-radius:2px;
+  }
+  h1,h2,h3{ font-family:var(--serif); font-weight:700; text-wrap:balance; margin:0; }
+  p{ margin:0; }
+  img,canvas{ display:block; }
+
+  .wrap{ max-width:880px; margin:0 auto; padding:0 20px 96px; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    background:
+      radial-gradient(ellipse 140% 100% at 50% -20%, color-mix(in srgb, var(--candle) 14%, transparent), transparent 60%),
+      var(--panel);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-inner{ max-width:880px; margin:0 auto; padding:56px 20px 40px; position:relative; z-index:2; }
+  .snowcv{ position:absolute; inset:0; width:100%; height:100%; z-index:1; opacity:0.8; }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--candle); display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--candle); display:inline-block; }
+  .lang-switch{
+    margin-left:auto; font-family:var(--mono); font-size:11px; letter-spacing:0.04em;
+    color:var(--frost-dim); border:1px solid var(--line); border-radius:999px; padding:3px 10px;
+    text-transform:none;
+  }
+  .lang-switch:hover{ color:var(--candle); border-color:var(--candle); text-decoration:none; }
+  h1.title{ font-size:clamp(2rem,5vw,2.75rem); letter-spacing:-0.01em; line-height:1.15; }
+  h1.title em{ display:block; font-style:italic; font-size:0.42em; color:var(--frost-dim); font-weight:400; margin-top:10px; letter-spacing:0; }
+  .pitch{ max-width:60ch; margin-top:18px; color:var(--frost-dim); font-size:1.02rem; }
+  .facts{ display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+  .fact{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
+    padding:10px 16px; min-width:108px;
+  }
+  .fact b{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:1.35rem; color:var(--candle); display:block; }
+  .fact span{ font-size:12px; color:var(--frost-dim); }
+  .vignette{ display:flex; gap:6px; align-items:flex-end; margin-top:26px; }
+  .vignette canvas{ image-rendering:pixelated; width:64px; height:64px; }
+
+  /* ---------- toc ---------- */
+  .toc{
+    position:sticky; top:0; z-index:10;
+    background:color-mix(in srgb, var(--night) 88%, transparent);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .toc-row{
+    max-width:880px; margin:0 auto; padding:10px 20px;
+    display:flex; gap:6px; overflow-x:auto; scrollbar-width:thin;
+  }
+  .toc-row a{
+    flex:0 0 auto; font-family:var(--mono); font-size:12px; color:var(--frost-dim);
+    padding:6px 10px; border-radius:999px; border:1px solid transparent; white-space:nowrap;
+  }
+  .toc-row a b{ color:var(--candle); font-weight:600; margin-right:5px; }
+  .toc-row a.active{ border-color:var(--line); background:var(--panel-2); color:var(--frost); }
+
+  /* ---------- sections ---------- */
+  section{ padding-top:64px; scroll-margin-top:60px; }
+  .chapter-head{ margin-bottom:26px; }
+  .chapter-head .eyebrow::before{ display:none; }
+  .chapter-head h2{ font-size:clamp(1.4rem,3vw,1.75rem); margin-top:4px; }
+  .chapter-head .rule{ width:48px; height:2px; background:var(--candle); margin:14px 0 12px; }
+  .chapter-head .lede{ color:var(--frost-dim); max-width:62ch; }
+
+  .prose p + p{ margin-top:12px; }
+  .prose{ max-width:66ch; color:var(--frost); }
+  .prose strong{ color:var(--candle); font-weight:600; }
+
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:20px 22px;
+  }
+  .grid{ display:grid; gap:14px; }
+  .grid-2{ grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+
+  .kv{ display:grid; grid-template-columns:auto 1fr; gap:6px 16px; font-size:14px; }
+  .kv dt{ font-family:var(--mono); color:var(--frost-dim); }
+  .kv dd{ margin:0; }
+
+  kbd{
+    font-family:var(--mono); font-size:12.5px; background:var(--panel-2);
+    border:1px solid var(--line); border-bottom-width:2px; border-radius:5px;
+    padding:2px 7px; color:var(--frost);
+  }
+
+  /* ---------- element chips ---------- */
+  .chip{
+    display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;
+    padding:3px 9px 3px 7px; border-radius:999px; white-space:nowrap;
+    background:var(--panel-2); border:1px solid var(--line); color:var(--frost);
+  }
+  .chip .dot{ width:8px; height:8px; border-radius:50%; flex:0 0 auto; }
+  .el-fire .dot{ background:var(--el-fire); } .el-water .dot{ background:var(--el-water); }
+  .el-wood .dot{ background:var(--el-wood); } .el-metal .dot{ background:var(--el-metal); }
+  .el-earth .dot{ background:var(--el-earth); } .el-light .dot{ background:var(--el-light); }
+  .el-dark .dot{ background:var(--el-dark); }
+
+  .tag{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.04em; text-transform:uppercase;
+    padding:2px 7px; border-radius:5px; border:1px solid var(--line); color:var(--frost-dim);
+  }
+  .tag.boss{ color:var(--holly); border-color:color-mix(in srgb, var(--holly) 45%, var(--line)); }
+  .tag.lock{ color:var(--candle); border-color:color-mix(in srgb, var(--candle) 45%, var(--line)); }
+
+  /* ---------- controls ---------- */
+  .keys{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+  .keys .card{ display:flex; align-items:center; gap:14px; padding:14px 16px; }
+  .keys .card span{ font-size:13.5px; color:var(--frost-dim); }
+
+  /* ---------- walkthrough ---------- */
+  .steps{ position:relative; margin-left:6px; padding-left:30px; border-left:1px solid var(--line); }
+  .step{ position:relative; padding-bottom:30px; }
+  .step:last-child{ padding-bottom:0; }
+  .step::before{
+    content:attr(data-n); position:absolute; left:-42px; top:0;
+    width:26px; height:26px; border-radius:50%; background:var(--panel-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:12px; color:var(--candle);
+  }
+  .step h3{ font-size:1.05rem; margin-bottom:6px; }
+  .step .prose{ font-size:14.5px; color:var(--frost-dim); }
+  .step .prose strong{ color:var(--frost); }
+
+  /* ---------- facility cards ---------- */
+  .facility{ display:flex; flex-direction:column; gap:10px; }
+  .facility h3{ font-size:1.05rem; display:flex; align-items:center; gap:8px; }
+  .facility .prose{ font-size:14px; color:var(--frost-dim); }
+  .price-list{ list-style:none; margin:4px 0 0; padding:0; font-size:13.5px; display:grid; gap:5px; }
+  .price-list li{ display:flex; justify-content:space-between; gap:10px; border-top:1px dashed var(--line); padding-top:5px; }
+  .price-list li:first-child{ border-top:none; padding-top:0; }
+  .price-list b{ font-family:var(--mono); color:var(--candle); font-variant-numeric:tabular-nums; }
+
+  /* ---------- tactics ---------- */
+  .tactics{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+  .tactic-card{ border-top:3px solid var(--candle); }
+  .tactic-card h3{ font-size:1rem; }
+  .tactic-card .prose{ font-size:13.5px; color:var(--frost-dim); margin-top:8px; }
+
+  /* ---------- element cycle ---------- */
+  .cycle{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+  .cycle .node{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    width:64px;
+  }
+  .cycle .node i{ width:34px; height:34px; border-radius:50%; }
+  .cycle .node b{ font-size:12px; }
+  .cycle .arrow{ color:var(--frost-dim); font-family:var(--mono); }
+  .duo{ display:flex; align-items:center; gap:18px; margin-top:22px; }
+  .duo .node i{ width:40px; height:40px; border-radius:50%; }
+  .duo .vs{ font-family:var(--mono); color:var(--candle); font-size:13px; }
+
+  .formula{
+    font-family:var(--mono); font-size:13px; background:var(--panel-2);
+    border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+    overflow-x:auto; white-space:pre;
+  }
+
+  /* ---------- tables ---------- */
+  .tbl-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }
+  table{ border-collapse:collapse; width:100%; font-size:13.5px; min-width:640px; }
+  thead th{
+    position:sticky; top:0; background:var(--panel-2); text-align:left;
+    font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--frost-dim); padding:10px 12px; border-bottom:1px solid var(--line);
+  }
+  tbody td{ padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--panel-2); }
+  td.num{ font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:right; }
+  td.name-en{ font-weight:600; }
+  td.name-ja{ color:var(--frost-dim); font-size:12px; }
+
+  /* ---------- bestiary ---------- */
+  .fam-head{ display:flex; align-items:center; gap:10px; margin:34px 0 14px; }
+  .fam-head:first-child{ margin-top:0; }
+  .fam-head h3{ font-size:1.05rem; }
+  .fam-grid{ display:grid; gap:10px; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); }
+  .line-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:14px; display:flex; align-items:center; gap:10px;
+  }
+  .mon{ display:flex; flex-direction:column; align-items:center; gap:4px; width:78px; flex:0 0 auto; }
+  .mon canvas{ image-rendering:pixelated; width:52px; height:52px; }
+  .mon .n-en{ font-size:12px; font-weight:600; text-align:center; line-height:1.25; }
+  .mon .n-ja{ font-size:10px; color:var(--frost-dim); text-align:center; }
+  .mon .lv{ font-family:var(--mono); font-size:10px; color:var(--candle); }
+  .arrow-mid{ color:var(--frost-dim); font-size:18px; flex:0 0 auto; }
+  .line-card.single{ justify-content:center; }
+  .line-note{ font-size:11.5px; color:var(--frost-dim); margin-top:6px; text-align:center; }
+
+  .special-grid{ display:grid; gap:10px; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); margin-top:14px; }
+  .special-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px;
+    display:flex; gap:12px; align-items:center;
+  }
+  .special-card .txt{ font-size:12.5px; color:var(--frost-dim); }
+  .special-card .txt b{ display:block; color:var(--frost); font-size:13.5px; margin-bottom:2px; }
+
+  /* ---------- fusion matrix ---------- */
+  .matrix-wrap{ overflow-x:auto; }
+  table.matrix{ border-collapse:collapse; min-width:760px; }
+  table.matrix th, table.matrix td{ border:1px solid var(--line); text-align:center; padding:6px; }
+  table.matrix thead th{ position:static; }
+  table.matrix .corner{ background:var(--panel-2); }
+  table.matrix .rowhead{ background:var(--panel-2); text-align:left; padding-left:10px; white-space:nowrap; }
+  table.matrix td.cell{ padding:8px 6px; }
+  table.matrix .cell canvas{ image-rendering:pixelated; width:32px; height:32px; margin:0 auto 4px; }
+  table.matrix .cell .cn{ font-size:10.5px; line-height:1.2; }
+
+  .recipe-list{ list-style:none; margin:16px 0 0; padding:0; display:grid; gap:8px; }
+  .recipe-list li{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:13.5px;
+  }
+  .recipe-list .combo{ display:flex; align-items:center; gap:8px; }
+  .recipe-list .result{ font-weight:600; color:var(--candle); display:flex; align-items:center; gap:6px; }
+
+  /* ---------- tips ---------- */
+  .tips{ display:grid; gap:12px; }
+  .tip{ display:flex; gap:14px; }
+  .tip .n{ font-family:var(--mono); color:var(--candle); font-size:13px; flex:0 0 24px; padding-top:2px; }
+  .tip .prose{ font-size:14.5px; }
+
+  footer{ margin-top:80px; padding-top:24px; border-top:1px solid var(--line); color:var(--frost-dim); font-size:12.5px; }
+  footer .snow{ font-family:var(--mono); letter-spacing:0.2em; opacity:0.5; margin-bottom:8px; }
+
+  /* ---------- ad slots ----------
+     Placed only at chapter breaks; never interrupts body text or tables.
+     min-height reserves space so layout doesn't shift once an ad loads. */
+  .ad-slot{
+    margin:56px 0; min-height:100px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    border:1px dashed var(--line); border-radius:12px; background:var(--panel-2);
+  }
+  .ad-slot-label{
+    font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--frost-dim); opacity:0.65;
+  }
+
+  @media (max-width:560px){
+    .hero-inner{ padding:44px 18px 32px; }
+    .steps{ padding-left:24px; }
+    .step::before{ left:-36px; width:22px; height:22px; font-size:11px; }
+  }
+</style>
+
+<div class="hero">
+  <canvas class="snowcv" id="snowcv"></canvas>
+  <div class="hero-inner">
+    <div class="eyebrow">Frostgrid — Unofficial Guide<a class="lang-switch" href="../">日本語</a></div>
+    <h1 class="title">Strategy Compendium<em>From waking up in the forest on Christmas Eve to collecting every last monster.</em></h1>
+    <p class="pitch">
+      This is a strategy guide for <strong>Frostgrid: Christmas Creature Tactics</strong>
+      (フロストグリッド 〜クリスマス・クリーチャー・タクティクス〜), a 2D monster-collecting RPG
+      that runs entirely in the browser. It covers controls, the story walkthrough, town facilities,
+      the battle system, a bestiary of all 44 monsters, the fusion chart, and postgame content —
+      all pulled straight from the game's own data.
+    </p>
+    <div class="facts">
+      <div class="fact"><b>7</b><span>Elements</span></div>
+      <div class="fact"><b>44</b><span>Monsters</span></div>
+      <div class="fact"><b>27</b><span>Skills</span></div>
+      <div class="fact"><b>3</b><span>Tactics</span></div>
+    </div>
+    <div class="vignette">
+      <canvas class="spr" data-mon="slime" width="16" height="16" title="Slime"></canvas>
+      <canvas class="spr" data-mon="hero" width="16" height="16" title="The Hero"></canvas>
+      <canvas class="spr" data-mon="dragonkid" width="16" height="16" title="Dragon Kid"></canvas>
+    </div>
+  </div>
+</div>
+
+<nav class="toc" id="toc">
+  <div class="toc-row">
+    <a href="#intro"><b>01</b>Introduction</a>
+    <a href="#controls"><b>02</b>Controls</a>
+    <a href="#walkthrough"><b>03</b>Walkthrough</a>
+    <a href="#town"><b>04</b>Town</a>
+    <a href="#battle"><b>05</b>Battle System</a>
+    <a href="#elements"><b>06</b>Elements</a>
+    <a href="#spells"><b>07</b>Spellbook</a>
+    <a href="#bestiary"><b>08</b>Bestiary</a>
+    <a href="#fusion"><b>09</b>Fusion Lab</a>
+    <a href="#tips"><b>10</b>Strategy</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section id="intro">
+    <div class="chapter-head">
+      <div class="eyebrow">01 / Introduction</div>
+      <h2>Introduction</h2>
+      <div class="rule"></div>
+      <p class="lede">How the story begins, and how to read this compendium.</p>
+    </div>
+    <div class="prose">
+      <p>
+        The story begins on Christmas Eve night. Our hero writes a letter to Santa —
+        "I don't need any toys. I want to become a hero and watch an adventure movie of
+        myself traveling the world" — then falls asleep, and wakes up collapsed in an
+        unfamiliar forest. Right there, a tiny <strong>Slime</strong> is fighting off a bad
+        monster. That's where the adventure — and the monster-collecting — begins.
+      </p>
+      <p>
+        The game is a build-free, zero-external-asset browser RPG: every 16×16 tile and
+        sprite is generated entirely in code. The monster icons pasted throughout this
+        compendium are drawn on the fly using that exact same generation logic.
+      </p>
+      <p>
+        You can switch the display language between <strong>English and にほんご</strong>
+        any time from the title screen or the Settings menu (English is the default).
+        This compendium lists every monster and skill name in both languages, so you
+        won't get lost no matter which language you're playing in.
+      </p>
+    </div>
+  </section>
+
+  <section id="controls">
+    <div class="chapter-head">
+      <div class="eyebrow">02 / Controls</div>
+      <h2>Controls</h2>
+      <div class="rule"></div>
+      <p class="lede">That's the whole control scheme — the same on the field and in battle.</p>
+    </div>
+    <div class="keys">
+      <div class="card"><kbd>↑↓←→</kbd> / <kbd>WASD</kbd><span style="margin-left:auto">Move / move cursor</span></div>
+      <div class="card"><kbd>Space</kbd><span style="margin-left:auto">Confirm / open mini-menu</span></div>
+      <div class="card"><kbd>X</kbd> / <kbd>ESC</kbd><span style="margin-left:auto">Cancel</span></div>
+    </div>
+    <div class="prose" style="margin-top:18px">
+      <p>
+        On the field, if there's something interactive in front of you — a person, a sign,
+        a shop counter — Space skips the mini-menu and talks to it directly. Press Space
+        facing empty ground and the mini-menu opens instead:
+        <strong>Talk/Check · Monsters · Items · Settings · Close</strong>.
+      </p>
+      <p>
+        <strong>Formation</strong>, at the bottom of the Monsters menu, lets you freely
+        arrange your party's starting positions within the left 3 columns of the same
+        10×10 grid used in battle. Decide your own front and back lines — put your
+        fragile healer in the back row for safety.
+      </p>
+    </div>
+  </section>
+
+  <section id="walkthrough">
+    <div class="chapter-head">
+      <div class="eyebrow">03 / Walkthrough</div>
+      <h2>Walkthrough</h2>
+      <div class="rule"></div>
+      <p class="lede">The single main path, from the opening to postgame content.</p>
+    </div>
+    <div class="steps">
+      <div class="step" data-n="1">
+        <h3>Meet the Slime in the forest</h3>
+        <p class="prose">Help the Slime fighting a bad monster in the forest where you wake up, and a
+        tutorial battle begins. Speech bubbles walk you through the battle screen step by step, so
+        following along wins the fight. The Slime joins as your first party member afterward.</p>
+      </div>
+      <div class="step" data-n="2">
+        <h3>Arrive in Castella Town</h3>
+        <p class="prose">Head north out of the forest and you'll reach the town. The
+        <strong>inn, item shop, wizard's house, and ranch</strong> are all here — this becomes
+        your home base from here on (details in the next chapter).</p>
+      </div>
+      <div class="step" data-n="3">
+        <h3>Talk to the King in the castle</h3>
+        <p class="prose">Meet the King, and he asks you to clear out the monsters overrunning the
+        <strong>cave</strong> behind the castle. Once the conversation ends, the guard steps aside
+        and the cave becomes accessible.</p>
+      </div>
+      <div class="step" data-n="4">
+        <h3>Push through Cave B1 and B2</h3>
+        <p class="prose">Two floors of random encounters. Near the entrance you'll only face a single
+        weak enemy, but the deeper you go, the more enemies appear at once (up to 3) and the higher
+        their level climbs. Grind a bit near the entrance before pushing further in.</p>
+      </div>
+      <div class="step" data-n="5">
+        <h3>Black Santa at the depths</h3>
+        <p class="prose">The ruler of the cave, <strong>Black Santa</strong>, and his minions bar
+        your way — a being who steals the dreams of good children. Bring a party that can exploit
+        his elemental weakness.</p>
+      </div>
+      <div class="step" data-n="6">
+        <h3>The King's reward</h3>
+        <p class="prose">After the fight you're warped before the King, who thanks you and gives you
+        the legendary <strong>Holy Knight (Lv12)</strong> as a new party member.</p>
+      </div>
+      <div class="step" data-n="7">
+        <h3 style="display:flex; align-items:center; gap:8px">Postgame <span class="tag lock">POSTGAME</span></h3>
+        <p class="prose">A reformed Black Santa now waits at the depths — beat him in a rematch and
+        he'll finally join your party for real. Postgame also unlocks two true final fusion
+        monsters, <strong>Chaos Dragon</strong> and <strong>Eve</strong> (see chapter 09).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ad slot 1: right after the story chapter (swap in AdSense etc. once self-hosted) -->
+  <div class="ad-slot" data-ad-slot="wiki-mid-1">
+    <span class="ad-slot-label">Advertisement</span>
+    <!-- Paste your ad network's tag here -->
+  </div>
+
+  <section id="town">
+    <div class="chapter-head">
+      <div class="eyebrow">04 / Town</div>
+      <h2>Town</h2>
+      <div class="rule"></div>
+      <p class="lede">What you can do in Castella Town. Always swing back here between outings.</p>
+    </div>
+    <div class="grid grid-2">
+      <div class="card facility">
+        <h3>🛏 Inn</h3>
+        <p class="prose"><strong>Record your journey</strong> to save, or <strong>Take a rest</strong>
+        (20G) to fully restore your whole party's HP, MP, and status ailments. The menu order,
+        top to bottom, is <strong>Take a rest → Record your journey → Never mind</strong>.</p>
+      </div>
+      <div class="card facility">
+        <h3>🎒 Item Shop</h3>
+        <p class="prose">Buy and sell items. On the Buy screen, whichever item your cursor is on
+        shows its description below.</p>
+        <ul class="price-list">
+          <li>Herb (HP +30)<b>30G</b></li>
+          <li>Antidote (cures poison)<b>10G</b></li>
+          <li>Magic Water (MP +20)<b>80G</b></li>
+          <li>Return Wing (warp to town)<b>25G</b></li>
+          <li>Power Seed (ATK +3)<b>300G</b></li>
+        </ul>
+      </div>
+      <div class="card facility">
+        <h3>🧪 Wizard's House</h3>
+        <p class="prose">Put two monsters <strong>level 10 or higher</strong> into the magic pot
+        and a new monster is born (details in chapter 09). You can also check the fusion chart here.</p>
+      </div>
+      <div class="card facility">
+        <h3>🐑 Ranch</h3>
+        <p class="prose">A place to leave monsters when your party of 3 is full. Talk to the
+        rancher to see a list of monsters currently staying there on the right side of the screen,
+        and swap freely (you can't leave your very last monster).</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="battle">
+    <div class="chapter-head">
+      <div class="eyebrow">05 / Battle System</div>
+      <h2>Battle System</h2>
+      <div class="rule"></div>
+      <p class="lede">Automated tactics battles on a 10×10 grid. All you set is the "tactic."</p>
+    </div>
+    <div class="prose">
+      <p>
+        When you're ambushed, your party lines up on the left and enemies on the right of a
+        10×10 grid. Turn order goes by <strong>highest Agility (AGI) first</strong>. Instead of
+        commanding each monster's movement, attacks, and skills yourself, you assign one of the
+        three "tactics" below to each monster and let them fight on their own.
+      </p>
+    </div>
+    <div class="tactics" style="margin-top:16px">
+      <div class="card tactic-card">
+        <h3>Go all out<span class="tag" style="margin-left:8px">ガンガンいこう</span></h3>
+        <p class="prose">Picks whatever deals the most damage (highest-priority skill), and 40% of
+        the time targets the enemy with the lowest HP. Good for wanting a quick kill.</p>
+      </div>
+      <div class="card tactic-card">
+        <h3>Mix it up<span class="tag" style="margin-left:8px">いろいろやろう</span></h3>
+        <p class="prose">Prioritizes healing if any ally is below 40% HP. A balanced style that
+        mixes in poison skills a bit over 30% of the time and attack skills 50% of the time.</p>
+      </div>
+      <div class="card tactic-card">
+        <h3>Stay safe<span class="tag" style="margin-left:8px">いのちをだいじに</span></h3>
+        <p class="prose">Heals any ally under 60% HP first, and falls back once its own HP drops
+        below 25%. A cautious style, well suited to a dedicated healer.</p>
+      </div>
+    </div>
+    <div class="prose" style="margin-top:18px">
+      <p>
+        Press <kbd>Space</kbd> mid-battle to change everyone's tactics starting next round (a
+        control hint stays on screen at all times, too). Attacks spawn element-specific particle
+        effects, and battle pacing can be tuned from Settings' <strong>Battle Speed</strong>
+        (Slow / Normal / Fast) — the default is the somewhat unhurried "Normal."
+      </p>
+      <p>
+        There are a few status effects to know. <strong>Poison</strong> shaves off 8% of max HP
+        every round; <strong>Bind</strong> (from skills like Root Bind) has a chance to lock a
+        target out of its turn for one round; <strong>Iron Wall</strong> multiplies the caster's
+        own Defense by 1.5 for 3 rounds.
+      </p>
+    </div>
+  </section>
+
+  <section id="elements">
+    <div class="chapter-head">
+      <div class="eyebrow">06 / Elements</div>
+      <h2>Elements</h2>
+      <div class="rule"></div>
+      <p class="lede">Seven elements — Fire, Water, Wood, Metal, Earth, Light, Dark. Damage shifts with the attacker/defender match-up.</p>
+    </div>
+    <div class="card">
+      <p class="prose" style="margin-bottom:20px">Following the classic five-element cycle,
+      <strong>Fire beats Metal, Metal beats Wood, Wood beats Earth, Earth beats Water, and Water
+      beats Fire</strong>. On top of that, <strong>Light and Dark are each strong against the
+      other</strong>. Attacking with a favorable element deals <strong>1.5× damage</strong>;
+      attacking into an unfavorable one deals <strong>0.65×</strong>.</p>
+      <div class="cycle">
+        <div class="node"><i style="background:var(--el-fire)"></i><b>Fire</b></div>
+        <div class="arrow">→</div>
+        <div class="node"><i style="background:var(--el-metal)"></i><b>Metal</b></div>
+        <div class="arrow">→</div>
+        <div class="node"><i style="background:var(--el-wood)"></i><b>Wood</b></div>
+        <div class="arrow">→</div>
+        <div class="node"><i style="background:var(--el-earth)"></i><b>Earth</b></div>
+        <div class="arrow">→</div>
+        <div class="node"><i style="background:var(--el-water)"></i><b>Water</b></div>
+        <div class="arrow">→</div>
+        <div class="node" style="opacity:0.45"><i style="background:var(--el-fire)"></i><b>Fire</b></div>
+      </div>
+      <div class="duo">
+        <div class="node"><i style="background:var(--el-light)"></i><b>Light</b></div>
+        <div class="vs">⇄ mutually strong ⇄</div>
+        <div class="node"><i style="background:var(--el-dark)"></i><b>Dark</b></div>
+      </div>
+    </div>
+    <div class="formula" style="margin-top:16px">Physical attack = (ATK x 1.6 - target DEF x 0.8) x element multiplier x 0.9-1.1
+Attack skill    = (power + MAG x 1.2 - target DEF x 0.4) x element multiplier x 0.9-1.1
+Heal amount     = power + MAG
+Poison          = hit-chance roll / while in battle, deals max HP x 8% every round</div>
+  </section>
+
+  <section id="spells">
+    <div class="chapter-head">
+      <div class="eyebrow">07 / Spellbook</div>
+      <h2>Spellbook</h2>
+      <div class="rule"></div>
+      <p class="lede">All 27 skills and spells. Range is measured in grid squares on the battle field.</p>
+    </div>
+
+    <h3 style="font-size:.95rem; margin:0 0 10px; color:var(--frost-dim)">Single-target Attacks</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Skill</th><th>Element</th><th class="num">MP</th><th class="num">Power</th><th class="num">Range</th><th>Learned by</th></tr></thead>
+        <tbody>
+          <tr><td><span class="name-ja">ファイア</span><br><span class="name-en">Fire</span></td><td><span class="chip el-fire"><i class="dot"></i>Fire</span></td><td class="num">2</td><td class="num">12</td><td class="num">3</td><td>Flame Lizard@3, Dragon Kid@1, Ember Wolf@3, Salamander@1, Elder Dragon@1</td></tr>
+          <tr><td><span class="name-ja">アクアショット</span><br><span class="name-en">Aqua Shot</span></td><td><span class="chip el-water"><i class="dot"></i>Water</span></td><td class="num">2</td><td class="num">12</td><td class="num">3</td><td>Slime@6, Snowman@2, King Slime@1</td></tr>
+          <tr><td><span class="name-ja">リーフカッター</span><br><span class="name-en">Leaf Cutter</span></td><td><span class="chip el-wood"><i class="dot"></i>Wood</span></td><td class="num">2</td><td class="num">12</td><td class="num">3</td><td>Bad Shroom@7, Forest Sprite@4, Elder Shroom@7, Elder Ent@5</td></tr>
+          <tr><td><span class="name-ja">メタルエッジ</span><br><span class="name-en">Metal Edge</span></td><td><span class="chip el-metal"><i class="dot"></i>Metal</span></td><td class="num">2</td><td class="num">12</td><td class="num">3</td><td>Tin Soldier@6, Metal Bee@9, Scrap Bot@5, Clockwork Titan@1, War Machine@1, Steel Hornet Queen@1, Iron Golem@1</td></tr>
+          <tr><td><span class="name-ja">ロックスロー</span><br><span class="name-en">Rock Throw</span></td><td><span class="chip el-earth"><i class="dot"></i>Earth</span></td><td class="num">2</td><td class="num">12</td><td class="num">3</td><td>Rock Golem@8, Mud Doll@6, Goblin King@1, Clay Colossus@8, Titan Golem@1</td></tr>
+          <tr><td><span class="name-ja">シャインフラッシュ</span><br><span class="name-en">Shine Flash</span></td><td><span class="chip el-light"><i class="dot"></i>Light</span></td><td class="num">2</td><td class="num">14</td><td class="num">3</td><td>Star Kid@2, Wild Reindeer@5, Holy Knight@1, Glow Moth@4, Luna Moth@1, Comet Kid@1, Aurora Reindeer@1, Fallen Knight@1, Sleigh Reindeer@1</td></tr>
+          <tr><td><span class="name-ja">ダークボール</span><br><span class="name-en">Dark Ball</span></td><td><span class="chip el-dark"><i class="dot"></i>Dark</span></td><td class="num">2</td><td class="num">14</td><td class="num">3</td><td>Big Bat@5, Shadow Beast@4, Black Santa@1, Nightmare Hound@4, Vampire Lord@1, Nightmare Lord@1, Fallen Knight@1</td></tr>
+          <tr><td><span class="name-ja">ファイアストーム</span><br><span class="name-en">Fire Storm</span></td><td><span class="chip el-fire"><i class="dot"></i>Fire</span></td><td class="num">5</td><td class="num">28</td><td class="num">3</td><td>Dragon Kid@12, Elder Dragon@1, Chaos Dragon@1</td></tr>
+          <tr><td><span class="name-ja">タイダルウェイブ</span><br><span class="name-en">Tidal Wave</span></td><td><span class="chip el-water"><i class="dot"></i>Water</span></td><td class="num">5</td><td class="num">28</td><td class="num">3</td><td>Slime@14, Snowman@13, King Slime@11, Yuki-onna@1, Sleigh Reindeer@8</td></tr>
+          <tr><td><span class="name-ja">ホーリーレイ</span><br><span class="name-en">Holy Ray</span></td><td><span class="chip el-light"><i class="dot"></i>Light</span></td><td class="num">5</td><td class="num">32</td><td class="num">3</td><td>Holy Knight@13, Santa@1, Eve@1</td></tr>
+          <tr><td><span class="name-ja">ダークネビュラ</span><br><span class="name-en">Dark Nebula</span></td><td><span class="chip el-dark"><i class="dot"></i>Dark</span></td><td class="num">5</td><td class="num">32</td><td class="num">3</td><td>Black Santa@1, Fallen Knight@12, Chaos Dragon@1, Eve@1</td></tr>
+          <tr><td><span class="name-ja">フレイムクロー</span><br><span class="name-en">Flame Claw</span></td><td><span class="chip el-fire"><i class="dot"></i>Fire</span></td><td class="num">2</td><td class="num">18</td><td class="num">1</td><td>Ember Wolf@9, Salamander@9</td></tr>
+          <tr><td><span class="name-ja">ムーンビーム</span><br><span class="name-en">Moonbeam</span></td><td><span class="chip el-light"><i class="dot"></i>Light</span></td><td class="num">3</td><td class="num">22</td><td class="num">3</td><td>Luna Moth@8, Aurora Reindeer@9</td></tr>
+          <tr><td><span class="name-ja">インフェルノ</span><br><span class="name-en">Inferno</span></td><td><span class="chip el-fire"><i class="dot"></i>Fire</span></td><td class="num">7</td><td class="num">40</td><td class="num">3</td><td>Elder Dragon@15</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:.95rem; margin:26px 0 10px; color:var(--frost-dim)">AoE, Status Effects &amp; Special Skills</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Skill</th><th>Element</th><th>Effect</th><th class="num">MP</th><th class="num">Power</th><th>Learned by</th></tr></thead>
+        <tbody>
+          <tr><td><span class="name-ja">クエイク</span><br><span class="name-en">Quake</span></td><td><span class="chip el-earth"><i class="dot"></i>Earth</span></td><td>Hits all foes</td><td class="num">6</td><td class="num">18</td><td>Titan Golem@12</td></tr>
+          <tr><td><span class="name-ja">スターシャワー</span><br><span class="name-en">Star Shower</span></td><td><span class="chip el-light"><i class="dot"></i>Light</span></td><td>Hits all foes</td><td class="num">6</td><td class="num">16</td><td>Comet Kid@8</td></tr>
+          <tr><td><span class="name-ja">ニードルストーム</span><br><span class="name-en">Needle Storm</span></td><td><span class="chip el-metal"><i class="dot"></i>Metal</span></td><td>Hits all foes</td><td class="num">6</td><td class="num">16</td><td>Steel Hornet Queen@10</td></tr>
+          <tr><td><span class="name-ja">オブリビオン</span><br><span class="name-en">Oblivion</span></td><td><span class="chip el-dark"><i class="dot"></i>Dark</span></td><td>Hits all foes</td><td class="num">8</td><td class="num">26</td><td>Chaos Dragon@16</td></tr>
+          <tr><td><span class="name-ja">ルートバインド</span><br><span class="name-en">Root Bind</span></td><td><span class="chip el-wood"><i class="dot"></i>Wood</span></td><td>50% chance to bind</td><td class="num">3</td><td class="num">14</td><td>Elder Shroom@13, Elder Ent@12</td></tr>
+          <tr><td><span class="name-ja">フロストキス</span><br><span class="name-en">Frost Kiss</span></td><td><span class="chip el-water"><i class="dot"></i>Water</span></td><td>40% chance to bind</td><td class="num">4</td><td class="num">24</td><td>Yuki-onna@9</td></tr>
+          <tr><td><span class="name-ja">ナイトメア</span><br><span class="name-en">Nightmare</span></td><td><span class="chip el-dark"><i class="dot"></i>Dark</span></td><td>40% chance to bind</td><td class="num">4</td><td class="num">24</td><td>Nightmare Lord@11</td></tr>
+          <tr><td><span class="name-ja">ブラッドドレイン</span><br><span class="name-en">Blood Drain</span></td><td><span class="chip el-dark"><i class="dot"></i>Dark</span></td><td>Drains 50% of damage dealt as HP</td><td class="num">3</td><td class="num">16</td><td>Vampire Lord@8</td></tr>
+          <tr><td><span class="name-ja">アイアンウォール</span><br><span class="name-en">Iron Wall</span></td><td><span class="chip el-metal"><i class="dot"></i>Metal</span></td><td>Own DEF x1.5 (3 rounds)</td><td class="num">2</td><td class="num">—</td><td>Clockwork Titan@9, War Machine@11, Iron Golem@10</td></tr>
+          <tr><td><span class="name-ja">ポイズン</span><br><span class="name-en">Poison</span></td><td><span class="chip el-wood"><i class="dot"></i>Wood</span></td><td>70% chance to poison</td><td class="num">2</td><td class="num">—</td><td>Bad Shroom@1, Mud Doll@3, Elder Shroom@1, Clay Colossus@1</td></tr>
+          <tr><td><span class="name-ja">ヒール</span><br><span class="name-en">Heal</span></td><td><span class="chip el-light"><i class="dot"></i>Light</span></td><td>Heals one ally</td><td class="num">2</td><td class="num">26</td><td>Slime@1, Forest Sprite@1, King Slime@1, Holy Knight@6, Elder Ent@1</td></tr>
+          <tr><td><span class="name-ja">ハイヒール</span><br><span class="name-en">High Heal</span></td><td><span class="chip el-light"><i class="dot"></i>Light</span></td><td>Heals one ally</td><td class="num">5</td><td class="num">60</td><td>Forest Sprite@15, Santa@1</td></tr>
+          <tr><td><span class="name-ja">ジェネシス</span><br><span class="name-en">Genesis</span></td><td><span class="chip el-light"><i class="dot"></i>Light</span></td><td>Heals the whole party</td><td class="num">8</td><td class="num">45</td><td>Eve@16</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Ad slot 2: right before the most-read bestiary chapter -->
+  <div class="ad-slot" data-ad-slot="wiki-mid-2">
+    <span class="ad-slot-label">Advertisement</span>
+    <!-- Paste your ad network's tag here -->
+  </div>
+
+  <section id="bestiary">
+    <div class="chapter-head">
+      <div class="eyebrow">08 / Bestiary</div>
+      <h2>Bestiary</h2>
+      <div class="rule"></div>
+      <p class="lede">Organized into "evolution lines" by element. → shows where fusing two of the same species (Lv10+) leads.</p>
+    </div>
+
+    <div class="fam-head"><span class="chip el-fire"><i class="dot"></i>Fire Family</span></div>
+    <div class="fam-grid">
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="lizard" width="16" height="16"></canvas><span class="n-ja">ほのおトカゲ</span><span class="n-en">Flame Lizard</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="salamander" width="16" height="16"></canvas><span class="n-ja">サラマンダー</span><span class="n-en">Salamander</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="dragonkid" width="16" height="16"></canvas><span class="n-ja">ドラゴンぼうや</span><span class="n-en">Dragon Kid</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="elderdragon" width="16" height="16"></canvas><span class="n-ja">こりゅう</span><span class="n-en">Elder Dragon</span></div>
+      </div>
+      <div class="line-card single">
+        <div class="mon"><canvas class="spr" data-mon="emberwolf" width="16" height="16"></canvas><span class="n-ja">えんおおかみ</span><span class="n-en">Ember Wolf</span><span class="line-note">No evolution &middot; wild only</span></div>
+      </div>
+    </div>
+
+    <div class="fam-head"><span class="chip el-water"><i class="dot"></i>Water Family</span></div>
+    <div class="fam-grid">
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="slime" width="16" height="16"></canvas><span class="n-en">Slime<br>(starting monster)</span><span class="n-ja">スライム</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="kingslime" width="16" height="16"></canvas><span class="n-ja">キングスライム</span><span class="n-en">King Slime</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="snowman" width="16" height="16"></canvas><span class="n-ja">ゆきだるまん</span><span class="n-en">Snowman</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="yukionna" width="16" height="16"></canvas><span class="n-ja">ゆきおんな</span><span class="n-en">Yuki-onna</span></div>
+      </div>
+    </div>
+
+    <div class="fam-head"><span class="chip el-wood"><i class="dot"></i>Wood Family</span></div>
+    <div class="fam-grid">
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="mushroom" width="16" height="16"></canvas><span class="n-ja">わるキノコ</span><span class="n-en">Bad Shroom</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="eldershroom" width="16" height="16"></canvas><span class="n-ja">おおおにキノコ</span><span class="n-en">Elder Shroom</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="fairy" width="16" height="16"></canvas><span class="n-ja">もりのせい</span><span class="n-en">Forest Sprite</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="elderent" width="16" height="16"></canvas><span class="n-ja">たいじゅのせいれい</span><span class="n-en">Elder Ent</span></div>
+      </div>
+    </div>
+
+    <div class="fam-head"><span class="chip el-metal"><i class="dot"></i>Metal Family</span></div>
+    <div class="fam-grid">
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="scrapbot" width="16" height="16"></canvas><span class="n-ja">くずてつロボ</span><span class="n-en">Scrap Bot</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="clockworktitan" width="16" height="16"></canvas><span class="n-ja">ぜんまいタイタン</span><span class="n-en">Clockwork Titan</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="tinsoldier" width="16" height="16"></canvas><span class="n-ja">ブリキへい</span><span class="n-en">Tin Soldier</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="warmachine" width="16" height="16"></canvas><span class="n-ja">せんとうロボ</span><span class="n-en">War Machine</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="metalbee" width="16" height="16"></canvas><span class="n-ja">メタルビー</span><span class="n-en">Metal Bee</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="steelhornetqueen" width="16" height="16"></canvas><span class="n-ja">メタルクイーン</span><span class="n-en">Steel Hornet Queen</span></div>
+      </div>
+    </div>
+
+    <div class="fam-head"><span class="chip el-earth"><i class="dot"></i>Earth Family</span></div>
+    <div class="fam-grid">
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="goblin" width="16" height="16"></canvas><span class="n-ja">いたずらゴブリン</span><span class="n-en">Prank Goblin</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="goblinking" width="16" height="16"></canvas><span class="n-ja">ゴブリンキング</span><span class="n-en">Goblin King</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="golem" width="16" height="16"></canvas><span class="n-ja">いわゴーレム</span><span class="n-en">Rock Golem</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="titangolem" width="16" height="16"></canvas><span class="n-ja">だいちのタイタン</span><span class="n-en">Titan Golem</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="mudman" width="16" height="16"></canvas><span class="n-ja">どろにんぎょう</span><span class="n-en">Mud Doll</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="claycolossus" width="16" height="16"></canvas><span class="n-ja">どろのきょじん</span><span class="n-en">Clay Colossus</span></div>
+      </div>
+    </div>
+
+    <div class="fam-head"><span class="chip el-light"><i class="dot"></i>Light Family</span></div>
+    <div class="fam-grid">
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="glowmoth" width="16" height="16"></canvas><span class="n-ja">ひかりが</span><span class="n-en">Glow Moth</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="lunamoth" width="16" height="16"></canvas><span class="n-ja">るなが</span><span class="n-en">Luna Moth</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="starkid" width="16" height="16"></canvas><span class="n-ja">ほしのこ</span><span class="n-en">Star Kid</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="cometkid" width="16" height="16"></canvas><span class="n-ja">りゅうせいのこ</span><span class="n-en">Comet Kid</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="reindeer" width="16" height="16"></canvas><span class="n-ja">あばれトナカイ</span><span class="n-en">Wild Reindeer</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="auroradeer" width="16" height="16"></canvas><span class="n-ja">オーロラトナカイ</span><span class="n-en">Aurora Reindeer</span></div>
+      </div>
+      <div class="line-card single">
+        <div class="mon"><canvas class="spr" data-mon="knight" width="16" height="16"></canvas><span class="n-ja">ホーリーナイト</span><span class="n-en">Holy Knight</span><span class="line-note">King&#39;s reward (Lv12)</span></div>
+      </div>
+      <div class="line-card single">
+        <div class="mon"><canvas class="spr" data-mon="santa" width="16" height="16"></canvas><span class="n-ja">サンタさま</span><span class="n-en">Santa</span><span class="line-note">Special fusion only &middot; Ch.09</span></div>
+      </div>
+    </div>
+
+    <div class="fam-head"><span class="chip el-dark"><i class="dot"></i>Dark Family</span></div>
+    <div class="fam-grid">
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="bat" width="16" height="16"></canvas><span class="n-ja">おおコウモリ</span><span class="n-en">Big Bat</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="vampirelord" width="16" height="16"></canvas><span class="n-ja">きゅうけつコウモリおう</span><span class="n-en">Vampire Lord</span></div>
+      </div>
+      <div class="line-card">
+        <div class="mon"><canvas class="spr" data-mon="shadowbeast" width="16" height="16"></canvas><span class="n-ja">やみけもの</span><span class="n-en">Shadow Beast</span></div>
+        <div class="arrow-mid">→</div>
+        <div class="mon"><canvas class="spr" data-mon="nightmarelord" width="16" height="16"></canvas><span class="n-ja">あくむのおう</span><span class="n-en">Nightmare Lord</span></div>
+      </div>
+      <div class="line-card single">
+        <div class="mon"><canvas class="spr" data-mon="nightmarehound" width="16" height="16"></canvas><span class="n-ja">あくむいぬ</span><span class="n-en">Nightmare Hound</span><span class="line-note">No evolution &middot; wild only</span></div>
+      </div>
+      <div class="line-card single">
+        <div class="mon"><canvas class="spr" data-mon="blacksanta" width="16" height="16"></canvas><span class="n-ja">ブラックサンタ</span><span class="n-en">Black Santa</span><span class="tag boss" style="margin-top:4px">BOSS</span></div>
+      </div>
+    </div>
+
+    <div class="fam-head" style="margin-top:40px"><span class="chip"><i class="dot" style="background:var(--candle)"></i>Cross-Fusion &amp; Special Monsters</span></div>
+    <p class="prose" style="font-size:13.5px; color:var(--frost-dim); margin-bottom:6px">
+      Born by crossing two different families — these don't belong to any single evolution line.
+    </p>
+    <div class="special-grid">
+      <div class="special-card">
+        <div class="mon"><canvas class="spr" data-mon="irongolem" width="16" height="16"></canvas></div>
+        <div class="txt"><b>Iron Golem</b>Rock Golem &times; Tin Soldier</div>
+      </div>
+      <div class="special-card">
+        <div class="mon"><canvas class="spr" data-mon="fallenknight" width="16" height="16"></canvas></div>
+        <div class="txt"><b>Fallen Knight</b>Holy Knight &times; Shadow Beast</div>
+      </div>
+      <div class="special-card">
+        <div class="mon"><canvas class="spr" data-mon="sleighdeer" width="16" height="16"></canvas></div>
+        <div class="txt"><b>Sleigh Reindeer</b>Wild Reindeer &times; Snowman</div>
+      </div>
+      <div class="special-card">
+        <div class="mon"><canvas class="spr" data-mon="chaosdragon" width="16" height="16"></canvas></div>
+        <div class="txt"><b>Chaos Dragon</b><span class="tag lock">POSTGAME</span><br>Elder Dragon &times; Nightmare Lord</div>
+      </div>
+      <div class="special-card">
+        <div class="mon"><canvas class="spr" data-mon="eve" width="16" height="16"></canvas></div>
+        <div class="txt"><b>Eve</b><span class="tag lock">POSTGAME</span><br>Black Santa &times; Santa</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fusion">
+    <div class="chapter-head">
+      <div class="eyebrow">09 / Fusion Lab</div>
+      <h2>Fusion Chart</h2>
+      <div class="rule"></div>
+      <p class="lede">Your quick reference for the Wizard's House's magic pot. Every newborn monster always starts at <strong>Lv1</strong>.</p>
+    </div>
+    <div class="prose">
+      <p>
+        Fusion requires <strong>both monsters to be level 10 or higher</strong>. Resolution has a
+        priority order: <strong>1) same species</strong> uses the evolution-line special recipes
+        from chapter 08; <strong>2) different species</strong> falls back to the
+        <strong>combination of their elements</strong>, looked up in the table below.
+      </p>
+    </div>
+
+    <h3 style="font-size:.95rem; margin:24px 0 10px; color:var(--frost-dim)">Element Fusion Chart (different species)</h3>
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th class="corner"></th>
+            <th><span class="chip el-fire"><i class="dot"></i>Fire</span></th>
+            <th><span class="chip el-water"><i class="dot"></i>Water</span></th>
+            <th><span class="chip el-wood"><i class="dot"></i>Wood</span></th>
+            <th><span class="chip el-metal"><i class="dot"></i>Metal</span></th>
+            <th><span class="chip el-earth"><i class="dot"></i>Earth</span></th>
+            <th><span class="chip el-light"><i class="dot"></i>Light</span></th>
+            <th><span class="chip el-dark"><i class="dot"></i>Dark</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class="rowhead"><span class="chip el-fire"><i class="dot"></i>Fire</span></th>
+            <td class="cell"><canvas class="spr" data-mon="dragonkid" width="16" height="16"></canvas><div class="cn">Dragon Kid</div></td>
+            <td class="cell"><canvas class="spr" data-mon="lizard" width="16" height="16"></canvas><div class="cn">Flame Lizard</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mushroom" width="16" height="16"></canvas><div class="cn">Bad Shroom</div></td>
+            <td class="cell"><canvas class="spr" data-mon="metalbee" width="16" height="16"></canvas><div class="cn">Metal Bee</div></td>
+            <td class="cell"><canvas class="spr" data-mon="lizard" width="16" height="16"></canvas><div class="cn">Flame Lizard</div></td>
+            <td class="cell"><canvas class="spr" data-mon="dragonkid" width="16" height="16"></canvas><div class="cn">Dragon Kid</div></td>
+            <td class="cell"><canvas class="spr" data-mon="shadowbeast" width="16" height="16"></canvas><div class="cn">Shadow Beast</div></td>
+          </tr>
+          <tr>
+            <th class="rowhead"><span class="chip el-water"><i class="dot"></i>Water</span></th>
+            <td class="cell"><canvas class="spr" data-mon="lizard" width="16" height="16"></canvas><div class="cn">Flame Lizard</div></td>
+            <td class="cell"><canvas class="spr" data-mon="snowman" width="16" height="16"></canvas><div class="cn">Snowman</div></td>
+            <td class="cell"><canvas class="spr" data-mon="fairy" width="16" height="16"></canvas><div class="cn">Forest Sprite</div></td>
+            <td class="cell"><canvas class="spr" data-mon="tinsoldier" width="16" height="16"></canvas><div class="cn">Tin Soldier</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mudman" width="16" height="16"></canvas><div class="cn">Mud Doll</div></td>
+            <td class="cell"><canvas class="spr" data-mon="snowman" width="16" height="16"></canvas><div class="cn">Snowman</div></td>
+            <td class="cell"><canvas class="spr" data-mon="bat" width="16" height="16"></canvas><div class="cn">Big Bat</div></td>
+          </tr>
+          <tr>
+            <th class="rowhead"><span class="chip el-wood"><i class="dot"></i>Wood</span></th>
+            <td class="cell"><canvas class="spr" data-mon="mushroom" width="16" height="16"></canvas><div class="cn">Bad Shroom</div></td>
+            <td class="cell"><canvas class="spr" data-mon="fairy" width="16" height="16"></canvas><div class="cn">Forest Sprite</div></td>
+            <td class="cell"><canvas class="spr" data-mon="fairy" width="16" height="16"></canvas><div class="cn">Forest Sprite</div></td>
+            <td class="cell"><canvas class="spr" data-mon="metalbee" width="16" height="16"></canvas><div class="cn">Metal Bee</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mushroom" width="16" height="16"></canvas><div class="cn">Bad Shroom</div></td>
+            <td class="cell"><canvas class="spr" data-mon="fairy" width="16" height="16"></canvas><div class="cn">Forest Sprite</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mushroom" width="16" height="16"></canvas><div class="cn">Bad Shroom</div></td>
+          </tr>
+          <tr>
+            <th class="rowhead"><span class="chip el-metal"><i class="dot"></i>Metal</span></th>
+            <td class="cell"><canvas class="spr" data-mon="metalbee" width="16" height="16"></canvas><div class="cn">Metal Bee</div></td>
+            <td class="cell"><canvas class="spr" data-mon="tinsoldier" width="16" height="16"></canvas><div class="cn">Tin Soldier</div></td>
+            <td class="cell"><canvas class="spr" data-mon="metalbee" width="16" height="16"></canvas><div class="cn">Metal Bee</div></td>
+            <td class="cell"><canvas class="spr" data-mon="metalbee" width="16" height="16"></canvas><div class="cn">Metal Bee</div></td>
+            <td class="cell"><canvas class="spr" data-mon="golem" width="16" height="16"></canvas><div class="cn">Rock Golem</div></td>
+            <td class="cell"><canvas class="spr" data-mon="knight" width="16" height="16"></canvas><div class="cn">Holy Knight</div></td>
+            <td class="cell"><canvas class="spr" data-mon="tinsoldier" width="16" height="16"></canvas><div class="cn">Tin Soldier</div></td>
+          </tr>
+          <tr>
+            <th class="rowhead"><span class="chip el-earth"><i class="dot"></i>Earth</span></th>
+            <td class="cell"><canvas class="spr" data-mon="lizard" width="16" height="16"></canvas><div class="cn">Flame Lizard</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mudman" width="16" height="16"></canvas><div class="cn">Mud Doll</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mushroom" width="16" height="16"></canvas><div class="cn">Bad Shroom</div></td>
+            <td class="cell"><canvas class="spr" data-mon="golem" width="16" height="16"></canvas><div class="cn">Rock Golem</div></td>
+            <td class="cell"><canvas class="spr" data-mon="golem" width="16" height="16"></canvas><div class="cn">Rock Golem</div></td>
+            <td class="cell"><canvas class="spr" data-mon="reindeer" width="16" height="16"></canvas><div class="cn">Wild Reindeer</div></td>
+            <td class="cell"><canvas class="spr" data-mon="bat" width="16" height="16"></canvas><div class="cn">Big Bat</div></td>
+          </tr>
+          <tr>
+            <th class="rowhead"><span class="chip el-light"><i class="dot"></i>Light</span></th>
+            <td class="cell"><canvas class="spr" data-mon="dragonkid" width="16" height="16"></canvas><div class="cn">Dragon Kid</div></td>
+            <td class="cell"><canvas class="spr" data-mon="snowman" width="16" height="16"></canvas><div class="cn">Snowman</div></td>
+            <td class="cell"><canvas class="spr" data-mon="fairy" width="16" height="16"></canvas><div class="cn">Forest Sprite</div></td>
+            <td class="cell"><canvas class="spr" data-mon="knight" width="16" height="16"></canvas><div class="cn">Holy Knight</div></td>
+            <td class="cell"><canvas class="spr" data-mon="reindeer" width="16" height="16"></canvas><div class="cn">Wild Reindeer</div></td>
+            <td class="cell"><canvas class="spr" data-mon="knight" width="16" height="16"></canvas><div class="cn">Holy Knight</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mudman" width="16" height="16"></canvas><div class="cn">Mud Doll</div></td>
+          </tr>
+          <tr>
+            <th class="rowhead"><span class="chip el-dark"><i class="dot"></i>Dark</span></th>
+            <td class="cell"><canvas class="spr" data-mon="shadowbeast" width="16" height="16"></canvas><div class="cn">Shadow Beast</div></td>
+            <td class="cell"><canvas class="spr" data-mon="bat" width="16" height="16"></canvas><div class="cn">Big Bat</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mushroom" width="16" height="16"></canvas><div class="cn">Bad Shroom</div></td>
+            <td class="cell"><canvas class="spr" data-mon="tinsoldier" width="16" height="16"></canvas><div class="cn">Tin Soldier</div></td>
+            <td class="cell"><canvas class="spr" data-mon="bat" width="16" height="16"></canvas><div class="cn">Big Bat</div></td>
+            <td class="cell"><canvas class="spr" data-mon="mudman" width="16" height="16"></canvas><div class="cn">Mud Doll</div></td>
+            <td class="cell"><canvas class="spr" data-mon="shadowbeast" width="16" height="16"></canvas><div class="cn">Shadow Beast</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:.95rem; margin:26px 0 4px; color:var(--frost-dim)">Special Recipes (species take priority)</h3>
+    <ul class="recipe-list">
+      <li><span class="combo"><canvas class="spr" data-mon="slime" width="16" height="16" style="width:24px;height:24px;image-rendering:pixelated"></canvas>Slime &times; Slime</span><span class="result">&rarr; King Slime</span></li>
+      <li><span class="combo"><canvas class="spr" data-mon="kingslime" width="16" height="16" style="width:24px;height:24px;image-rendering:pixelated"></canvas>King Slime &times; Holy Knight</span><span class="result">&rarr; Santa</span></li>
+      <li><span class="combo"><canvas class="spr" data-mon="knight" width="16" height="16" style="width:24px;height:24px;image-rendering:pixelated"></canvas>Holy Knight &times; Wild Reindeer</span><span class="result">&rarr; Santa</span></li>
+      <li><span class="combo">All 17 "evolution line" pairs (see chapter 08)</span><span class="result">&rarr; each line's advanced form</span></li>
+      <li><span class="combo"><canvas class="spr" data-mon="golem" width="16" height="16" style="width:24px;height:24px;image-rendering:pixelated"></canvas>Rock Golem &times; Tin Soldier</span><span class="result">&rarr; Iron Golem</span></li>
+      <li><span class="combo"><canvas class="spr" data-mon="knight" width="16" height="16" style="width:24px;height:24px;image-rendering:pixelated"></canvas>Holy Knight &times; Shadow Beast</span><span class="result">&rarr; Fallen Knight</span></li>
+      <li><span class="combo"><canvas class="spr" data-mon="reindeer" width="16" height="16" style="width:24px;height:24px;image-rendering:pixelated"></canvas>Wild Reindeer &times; Snowman</span><span class="result">&rarr; Sleigh Reindeer</span></li>
+      <li><span class="combo"><canvas class="spr" data-mon="elderdragon" width="16" height="16" style="width:24px;height:24px;image-rendering:pixelated"></canvas>Elder Dragon &times; Nightmare Lord</span><span class="result">&rarr; Chaos Dragon <span class="tag lock">POSTGAME</span></span></li>
+      <li><span class="combo"><canvas class="spr" data-mon="blacksanta" width="16" height="16" style="width:24px;height:24px;image-rendering:pixelated"></canvas>Black Santa &times; Santa</span><span class="result">&rarr; Eve <span class="tag lock">POSTGAME</span></span></li>
+    </ul>
+    <p class="prose" style="font-size:12.5px; color:var(--frost-dim); margin-top:12px">
+      The 2 <span class="tag lock">POSTGAME</span> recipes stay "sealed by a mysterious power" until you defeat the boss at the bottom of the cave.
+    </p>
+  </section>
+
+  <!-- Ad slot 3: right before the final chapter -->
+  <div class="ad-slot" data-ad-slot="wiki-mid-3">
+    <span class="ad-slot-label">Advertisement</span>
+    <!-- Paste your ad network's tag here -->
+  </div>
+
+  <section id="tips">
+    <div class="chapter-head">
+      <div class="eyebrow">10 / Strategy</div>
+      <h2>Strategy Tips</h2>
+      <div class="rule"></div>
+      <p class="lede">Things worth knowing that we picked up along the way.</p>
+    </div>
+    <div class="tips">
+      <div class="tip"><div class="n">01</div><div class="prose">Raising two of the same species to Lv10 guarantees an evolution into the advanced form.
+      Fusion isn't a gamble — it's a breeding plan for deciding which line to invest in. Pick a target element first, then farm the wilds for matching monsters.</div></div>
+      <div class="tip"><div class="n">02</div><div class="prose">Skill MP costs are low across the board (basic skills run 2-5 MP), so feel free to cast
+      freely from the very start. Carrying 1-2 Magic Water as a safety net for when you run dry is a good habit.</div></div>
+      <div class="tip"><div class="n">03</div><div class="prose">Put your "Mix it up" healer in the back (right-leaning columns) via <strong>Formation</strong>
+      so it's less likely to eat the enemy's opening attack. High-DEF Golem- and Titan-line monsters make good front-liners.</div></div>
+      <div class="tip"><div class="n">04</div><div class="prose">Lingering near the cave entrance keeps enemies weak. Do your early gold-farming and skill
+      leveling near the entrance, and only push deeper once your gear and party are ready.</div></div>
+      <div class="tip"><div class="n">05</div><div class="prose">Black Santa is a Dark-element boss. <strong>Light-element skills (Shine Flash / Holy Ray)</strong>
+      land 1.5x damage on him. Keep a Holy Knight or a Star Kid-line monster in your lineup.</div></div>
+      <div class="tip"><div class="n">06</div><div class="prose">After the credits, always head back to the cave depths for a rematch with Black Santa. Beat
+      him and he joins your party — which also unlocks the final fusion route, "Santa &times; Black Santa &rarr; Eve."</div></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="snow">&#10052; &middot; &#10052; &middot; &#10052;</div>
+    <p>This is an unofficial, fan-made strategy compendium. Every monster sprite is drawn live in
+    the browser using a reimplementation of the game's own tile-generation logic. Data is sourced
+    from <code>js/data.js</code> (please keep it updated if anything drifts out of sync).</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // ---- Redraw each monster's pixel sprite ----
+  // Same template+palette approach as the game itself (js/gfx.js). Chars: '.'=transparent k=black w=white 1-4=palette color
+  var TEMPLATES = {
+    hero_d:[
+    "................","......3333......",".....333333.....","....33333333w...",
+    "....44444444....","....4k4444k4....","....44444444....",".....444444.....",
+    "....11111111....","...1111111111...","...4111111114...","....11111111....",
+    "....222..222....","....22....22....","....kk....kk....","................"],
+    blob:[
+    "................","................","................","......1111......",
+    "....11111111....","...1111111111...","..111111111111..","..11k11111k111..",
+    "..111121121111..","..111112211111..","..111111111111..","...1111111111...",
+    "....11111111....",".....111111.....","................","................"],
+    kingblob:[
+    "................","....3..33..3....","....33333333....","......1111......",
+    "....11111111....","...1111111111...","..111111111111..","..11k11111k111..",
+    "..111121121111..","..111112211111..","..111111111111..","...1111111111...",
+    "....11111111....",".....111111.....","................","................"],
+    bat:[
+    "................","................","................","..1..........1..",
+    ".111...11...111.",".1111.1111.1111.",".11111111111111.","..111111111111..",
+    "...11w1111w11...","....11111111....",".....1.11.1.....","................",
+    "................","................","................","................"],
+    mushroom:[
+    "................","................",".....111111.....","...1112111211...",
+    "..111111111111..","..112111121111..","..111111111111..","...1111111111...",
+    ".....444444.....",".....4k44k4.....",".....444444.....","......4444......",
+    "......4444......","................","................","................"],
+    golem:[
+    "................","................","....111111......","...11111111.....",
+    "...1k1111k1.....","...11111111.....",".111.111111.111.",".111.111111.111.",
+    ".111.111111.111.",".11...1111...11.","......1111......","....111..111....",
+    "....111..111....","....11....11....","................","................"],
+    dragon:[
+    "................","................",".....111........","....11k11.......",
+    "....111111......",".....11111.222..","....11111112222.","...111111111222.",
+    "...1111111111...","...4444111111...","....441111111...",".....111111.....",
+    "....11...11.....","....kk...kk.....","................","................"],
+    beast:[
+    "................","................","................","................",
+    "...3.......3....","..11.......11...","..111111111112..","..1k1111111122..",
+    "..111111111112..","...1111111111...","...11..11..11...","...11..11..11...",
+    "...kk..kk..kk...","................","................","................"],
+    fairy:[
+    "................","................","......1111......","..2..111111..2..",
+    ".222.1k11k1.222.",".2221111111222..","..22111111122...","....11111111....",
+    ".....111111.....","......1111......",".....11..11.....","................",
+    "................","................","................","................"],
+    star:[
+    "................",".......11.......",".......11.......","......1111......",
+    "..111111111111..","...1111111111...","....11111111....","....1k1111k1....",
+    "....11122111....","...1111111111...","...1111..1111...","..111......111..",
+    "................","................","................","................"],
+    snowman:[
+    "................","................","......1111......",".....111111.....",
+    ".....1k11k1.....",".....111111.....","....33333333....","....11111111....",
+    "...1111211111...","...1111111111...","...1111211111...","....11111111....",
+    ".....111111.....","................","................","................"],
+    bee:[
+    "................","................","...2......2.....","....2....2......",
+    "..w.111111.w....",".ww11221122ww...",".w111221122ww...","..111111111w....",
+    "...11221122.....","....111111......",".....1111.......","......11........",
+    "................","................","................","................"],
+    humanoid:[
+    "................","......3333......",".....333333.....","....44444444....",
+    "....4k4444k4....","....44444444....",".....444444.....",".....111111.....",
+    "....11111111....","...4111111114...","....11111111....","....22222222....",
+    "....22....22....","....22....22....","....kk....kk....","................"],
+    wizard:[
+    ".......33.......","......3333......",".....333333.....","...3333333333...",
+    "....44444444....","....4k4444k4....","....4w4444w4....",".....111111.....",
+    "....11111111....","...4111111114...","....11111111....","....11111111....",
+    "....11....11....","....11....11....","....kk....kk....","................"]
+  };
+
+  var SPR = {
+    hero:{tpl:'hero_d', pal:{'1':'#3a6ec2','2':'#2f4a96','3':'#c2453a','4':'#f2d2ac'}},
+    slime:{tpl:'blob', pal:{'1':'#4aa3e8','2':'#dff4ff'}},
+    kingslime:{tpl:'kingblob', pal:{'1':'#3a7be5','2':'#dff4ff','3':'#e8c84a'}},
+    goblin:{tpl:'humanoid', pal:{'1':'#7a5a2a','2':'#5a4a2a','3':'#4aa54c','4':'#8ac25a'}},
+    bat:{tpl:'bat', pal:{'1':'#6a4ac2','2':'#4a3a8a'}},
+    mushroom:{tpl:'mushroom', pal:{'1':'#c2453a','2':'#f2e8d8','4':'#f2e0c2'}},
+    lizard:{tpl:'dragon', pal:{'1':'#e87a3a','2':'#c25a2a','4':'#f2d28a'}},
+    golem:{tpl:'golem', pal:{'1':'#9a8a72'}},
+    tinsoldier:{tpl:'humanoid', pal:{'1':'#c2453a','2':'#3a5ab0','3':'#2a2a30','4':'#e8c88a'}},
+    snowman:{tpl:'snowman', pal:{'1':'#f2f2f2','2':'#2a2a30','3':'#c2453a'}},
+    fairy:{tpl:'fairy', pal:{'1':'#8ac25a','2':'#c2f2aa'}},
+    starkid:{tpl:'star', pal:{'1':'#e8d84a','2':'#e89a3a'}},
+    shadowbeast:{tpl:'beast', pal:{'1':'#4a3a5a','2':'#7a5ae8','3':'#3a2a4a'}},
+    dragonkid:{tpl:'dragon', pal:{'1':'#c23a3a','2':'#8a2a2a','4':'#e8c85a'}},
+    metalbee:{tpl:'bee', pal:{'1':'#c8c8d8','2':'#8a8a9a'}},
+    mudman:{tpl:'blob', pal:{'1':'#8a6a3a','2':'#6a5230'}},
+    reindeer:{tpl:'beast', pal:{'1':'#a5703a','2':'#c2453a','3':'#6e4a22'}},
+    knight:{tpl:'humanoid', pal:{'1':'#e8e8f2','2':'#c8a23a','3':'#e8cc5a','4':'#f2d2ac'}},
+    santa:{tpl:'wizard', pal:{'1':'#c2453a','2':'#98302a','3':'#c2453a','4':'#f2d2ac'}},
+    blacksanta:{tpl:'wizard', pal:{'1':'#3a2a3a','2':'#2a1a2a','3':'#6a1a2a','4':'#c2a2a2'}},
+    scrapbot:{tpl:'golem', pal:{'1':'#9a9aa8','2':'#7a5a3a'}},
+    glowmoth:{tpl:'bee', pal:{'1':'#f2eeb8','2':'#e8d84a'}},
+    emberwolf:{tpl:'beast', pal:{'1':'#d85a2a','2':'#ffb43a','3':'#a83a1a'}},
+    nightmarehound:{tpl:'beast', pal:{'1':'#3a2a4a','2':'#8a3ae5','3':'#2a1a3a'}},
+    goblinking:{tpl:'humanoid', pal:{'1':'#7a5a2a','2':'#5a4a2a','3':'#e8c84a','4':'#8ac25a'}},
+    vampirelord:{tpl:'bat', pal:{'1':'#8a1a2a','2':'#4a0a1a'}},
+    eldershroom:{tpl:'mushroom', pal:{'1':'#8a3ae5','2':'#f2e8d8','4':'#d8c8f2'}},
+    salamander:{tpl:'dragon', pal:{'1':'#c22a1a','2':'#ff8a3a','4':'#f2d28a'}},
+    clockworktitan:{tpl:'golem', pal:{'1':'#c8a23a','2':'#8a6a2a'}},
+    lunamoth:{tpl:'bee', pal:{'1':'#b8e8f2','2':'#5ab8e8'}},
+    claycolossus:{tpl:'golem', pal:{'1':'#8a6a3a','2':'#6a5230'}},
+    titangolem:{tpl:'golem', pal:{'1':'#5a5a52','2':'#3aa54c'}},
+    warmachine:{tpl:'humanoid', pal:{'1':'#6a6a7a','2':'#c2453a','3':'#3a3a44','4':'#9a9aa8'}},
+    yukionna:{tpl:'humanoid', pal:{'1':'#e8f2f8','2':'#b8d8e8','3':'#2a3a5a','4':'#f2ede8'}},
+    elderent:{tpl:'golem', pal:{'1':'#5b3a1e','2':'#2e7a3c'}},
+    cometkid:{tpl:'star', pal:{'1':'#8ae8f2','2':'#3a7be5'}},
+    nightmarelord:{tpl:'beast', pal:{'1':'#1a1a2a','2':'#c2453a','3':'#4a1a5a'}},
+    steelhornetqueen:{tpl:'bee', pal:{'1':'#d8d8e8','2':'#c8a23a'}},
+    auroradeer:{tpl:'beast', pal:{'1':'#f2f2f8','2':'#8ae8c8','3':'#e87a9a'}},
+    elderdragon:{tpl:'dragon', pal:{'1':'#6a1a1a','2':'#c8a23a','4':'#e8c85a'}},
+    irongolem:{tpl:'golem', pal:{'1':'#7a7a8a','2':'#4a4a5a'}},
+    fallenknight:{tpl:'humanoid', pal:{'1':'#2a2a3a','2':'#5a1a6a','3':'#4a4a5a','4':'#c2a2b2'}},
+    sleighdeer:{tpl:'beast', pal:{'1':'#a5703a','2':'#e8c84a','3':'#c2453a'}},
+    chaosdragon:{tpl:'dragon', pal:{'1':'#2a1a3a','2':'#8a3ae5','4':'#c2453a'}},
+    eve:{tpl:'humanoid', pal:{'1':'#f8f8f2','2':'#c8a23a','3':'#e8e8c8','4':'#f2d2ac'}}
+  };
+  var COMMON = {k:'#1a1a1a', w:'#ffffff'};
+
+  function drawMon(canvas, id){
+    var def = SPR[id];
+    if(!def) return;
+    var rows = TEMPLATES[def.tpl];
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,16,16);
+    for(var y=0;y<16;y++){
+      var row = rows[y];
+      for(var x=0;x<16;x++){
+        var ch = row[x];
+        if(ch==='.') continue;
+        ctx.fillStyle = def.pal[ch] || COMMON[ch] || '#ff00ff';
+        ctx.fillRect(x,y,1,1);
+      }
+    }
+  }
+  document.querySelectorAll('canvas.spr').forEach(function(cv){
+    drawMon(cv, cv.getAttribute('data-mon'));
+  });
+
+  // ---- hero snowfall (respects prefers-reduced-motion) ----
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cv = document.getElementById('snowcv');
+  if(cv){
+    var ctx2 = cv.getContext('2d');
+    var flakes = [];
+    function resize(){
+      var host = cv.parentElement;
+      cv.width = host.clientWidth;
+      cv.height = host.clientHeight;
+      var n = Math.max(24, Math.floor(cv.width/22));
+      flakes = [];
+      for(var i=0;i<n;i++){
+        flakes.push({
+          x: Math.random()*cv.width,
+          y: Math.random()*cv.height,
+          r: 1 + Math.random()*2,
+          s: 6 + Math.random()*18
+        });
+      }
+    }
+    function draw(dt){
+      ctx2.clearRect(0,0,cv.width,cv.height);
+      ctx2.fillStyle = 'rgba(238,241,251,0.85)';
+      for(var i=0;i<flakes.length;i++){
+        var f = flakes[i];
+        if(!reduce){
+          f.y += f.s*dt; f.x += Math.sin(f.y*0.02)*0.15;
+          if(f.y > cv.height){ f.y = -4; f.x = Math.random()*cv.width; }
+        }
+        ctx2.beginPath();
+        ctx2.arc(f.x, f.y, f.r, 0, Math.PI*2);
+        ctx2.fill();
+      }
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    if(reduce){
+      draw(0);
+    }else{
+      var last = performance.now();
+      requestAnimationFrame(function loop(now){
+        draw(Math.min(0.05, (now-last)/1000));
+        last = now;
+        requestAnimationFrame(loop);
+      });
+    }
+  }
+
+  // ---- toc active-section highlight ----
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc-row a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('main > section[id]'));
+  if('IntersectionObserver' in window && sections.length){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        var link = map[en.target.id];
+        if(!link) return;
+        if(en.isIntersecting) link.classList.add('active');
+        else link.classList.remove('active');
+      });
+    }, {rootMargin:'-40% 0px -55% 0px'});
+    sections.forEach(function(s){ io.observe(s); });
+  }
+})();
+</script>

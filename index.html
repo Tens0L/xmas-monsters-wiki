@@ -100,6 +100,12 @@
     color:var(--candle); display:flex; align-items:center; gap:10px; margin-bottom:14px;
   }
   .eyebrow::before{ content:""; width:22px; height:1px; background:var(--candle); display:inline-block; }
+  .lang-switch{
+    margin-left:auto; font-family:var(--mono); font-size:11px; letter-spacing:0.04em;
+    color:var(--frost-dim); border:1px solid var(--line); border-radius:999px; padding:3px 10px;
+    text-transform:none;
+  }
+  .lang-switch:hover{ color:var(--candle); border-color:var(--candle); text-decoration:none; }
   h1.title{ font-size:clamp(2rem,5vw,2.75rem); letter-spacing:-0.01em; line-height:1.15; }
   h1.title em{ display:block; font-style:italic; font-size:0.42em; color:var(--frost-dim); font-weight:400; margin-top:10px; letter-spacing:0; }
   .pitch{ max-width:60ch; margin-top:18px; color:var(--frost-dim); font-size:1.02rem; }
@@ -324,7 +330,7 @@
 <div class="hero">
   <canvas class="snowcv" id="snowcv"></canvas>
   <div class="hero-inner">
-    <div class="eyebrow">フロストグリッド 非公式ガイド</div>
+    <div class="eyebrow">フロストグリッド 非公式ガイド<a class="lang-switch" href="en/">English</a></div>
     <h1 class="title">攻略手帖<em>クリスマスイブの夜、森で目をさましてから、すべてのモンスターを集め終えるまで。</em></h1>
     <p class="pitch">
       このページは、ブラウザだけで遊べる2Dモンスター育成RPG「フロストグリッド 〜クリスマス・クリーチャー・タクティクス〜」
